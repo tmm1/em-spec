@@ -4,6 +4,8 @@ Simple BDD API for testing asynchronous Ruby/EventMachine code
 
 The API is identical to Bacon, except that you must explicitly call 'done' after all the current behavior's assertions have been made:
 
+  require 'em/spec'
+
   EM.describe EventMachine do
 
     should 'have timers' do

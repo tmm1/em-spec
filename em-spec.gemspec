@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
 
   # ruby -rpp -e "pp Dir['{README,{examples,lib,protocol}/**/*.{json,rb,txt,xml}}'].map"
   s.files = ["README",
-             "lib/em/emspec.rb",
+             "lib/em/spec.rb",
              "lib/ext/em.rb",
              "lib/ext/fiber18.rb"]
 end
