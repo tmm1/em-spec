@@ -3,15 +3,15 @@ require File.dirname(__FILE__) + '/../ext/fiber18'
 require 'bacon'
 
 class Bacon::Context
-  unless method_defined? :_it
-    alias :_it :it
-    def it *args
-      _it(*args){ if block_given? then yield; Fiber.yield end }
-    end
-    def done() $bacon_fiber.resume if $bacon_fiber end
-    alias :resume :done
+  alias :_it :it
+  def it *args
+    _it(*args){ if block_given? then yield; Fiber.yield end }
   end
-end
+
+  def done
+    $bacon_fiber.resume! if $bacon_fiber
+  end
+end unless Bacon::Context.method_defined? :_it
 
 require 'eventmachine'
 
