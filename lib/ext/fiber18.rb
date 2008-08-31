@@ -21,11 +21,14 @@ unless defined? Fiber
 
     def resume *args
       raise FiberError, 'dead fiber called' unless @thread.alive?
-      unless @thread == Thread.current
-        @resume.push(args)
-        result = @yield.pop
-        result.size > 1 ? result : result.first
-      end
+      raise FiberError, 'double resume' if @thread == Thread.current
+      @resume.push(args)
+      result = @yield.pop
+      result.size > 1 ? result : result.first
+    end
+    
+    def resume!
+      @resume.push []
     end
     
     def yield *args
