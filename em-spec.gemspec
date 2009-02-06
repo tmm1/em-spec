@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'em-spec'
-  s.version = '0.1.0'
+  s.version = '0.1.1'
   s.date = '2008-08-01'
   s.summary = 'Bacon based BDD API for Ruby/EventMachine'
   s.email = "em-spec@tmm1.net"
