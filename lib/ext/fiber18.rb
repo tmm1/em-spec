@@ -50,6 +50,8 @@ unless defined? Fiber
       "#<#{self.class}:0x#{self.object_id.to_s(16)}>"
     end
   end
+else
+  require 'fiber'
 end
 
 if __FILE__ == $0

@@ -9,7 +9,9 @@ class Bacon::Context
   end
 
   def done
-    $bacon_fiber.resume! if $bacon_fiber
+    EM.next_tick{
+      $bacon_fiber.resume if $bacon_fiber
+    }
   end
 end unless Bacon::Context.method_defined? :_it
 
@@ -23,7 +25,7 @@ module EventMachine
     EM.run{
       Bacon.summary_on_exit
       ($bacon_fiber = Fiber.new{
-                        Bacon::Context.new(args.join(' '), &blk)
+                        Bacon::Context.new(args.join(' '), &blk).run
                         EM.stop_event_loop
                       }).resume
     }
@@ -32,6 +34,11 @@ module EventMachine
 end
 
 EM.describe EventMachine do
+
+  should 'work' do
+    1.should == 1
+    done
+  end
 
   should 'have timers' do
     start = Time.now
