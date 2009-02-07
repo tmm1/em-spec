@@ -2,10 +2,14 @@ require File.dirname(__FILE__) + '/../ext/fiber18'
 
 require 'bacon'
 
-class Bacon::Context
-  alias :_it :it
+class Bacon::FiberedContext < Bacon::Context
   def it *args
-    _it(*args){ if block_given? then yield; Fiber.yield end }
+    super{
+      if block_given?
+        yield
+        Fiber.yield
+      end
+    }
   end
 
   def done
@@ -13,7 +17,7 @@ class Bacon::Context
       $bacon_fiber.resume if $bacon_fiber
     }
   end
-end unless Bacon::Context.method_defined? :_it
+end
 
 require 'eventmachine'
 
@@ -25,7 +29,7 @@ module EventMachine
     EM.run{
       Bacon.summary_on_exit
       ($bacon_fiber = Fiber.new{
-                        Bacon::Context.new(args.join(' '), &blk).run
+                        Bacon::FiberedContext.new(args.join(' '), &blk).run
                         EM.stop_event_loop
                       }).resume
     }
@@ -33,33 +37,41 @@ module EventMachine
   class << self; alias :describe :spec; end
 end
 
-EM.describe EventMachine do
+if __FILE__ == $0
 
-  should 'work' do
-    1.should == 1
-    done
+  describe 'Bacon' do
+    should 'work as normal outside EM.describe' do
+      1.should == 1
+    end
   end
 
-  should 'have timers' do
-    start = Time.now
-
-    EM.add_timer(0.5){
-      (Time.now-start).should.be.close 0.5, 0.1
+  EM.describe EventMachine do
+    should 'work' do
+      1.should == 1
       done
-    }
-  end
+    end
 
-  should 'have periodic timers' do
-    num = 0
-    start = Time.now
+    should 'have timers' do
+      start = Time.now
 
-    timer = EM.add_periodic_timer(0.5){
-      if (num += 1) == 2
-        (Time.now-start).should.be.close 1.0, 0.1
-        EM.__send__ :cancel_timer, timer
+      EM.add_timer(0.5){
+        (Time.now-start).should.be.close 0.5, 0.1
         done
-      end
-    }
+      }
+    end
+
+    should 'have periodic timers' do
+      num = 0
+      start = Time.now
+
+      timer = EM.add_periodic_timer(0.5){
+        if (num += 1) == 2
+          (Time.now-start).should.be.close 1.0, 0.1
+          EM.__send__ :cancel_timer, timer
+          done
+        end
+      }
+    end
   end
 
-end if __FILE__ == $0
+end
