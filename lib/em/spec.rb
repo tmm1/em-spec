@@ -14,6 +14,7 @@ class Bacon::FiberedContext < Bacon::Context
 
   def done
     EM.next_tick{
+      :done.should == :done
       $bacon_fiber.resume if $bacon_fiber
     }
   end
@@ -47,7 +48,6 @@ if __FILE__ == $0
 
   EM.describe EventMachine do
     should 'work' do
-      1.should == 1
       done
     end
 
@@ -77,7 +77,6 @@ if __FILE__ == $0
       defr = EM::DefaultDeferrable.new
       defr.timeout(1)
       defr.errback{
-        :timeout.should == :timeout
         done
       }
     end
