@@ -72,6 +72,15 @@ if __FILE__ == $0
         end
       }
     end
+
+    should 'have deferrables' do
+      defr = EM::DefaultDeferrable.new
+      defr.timeout(1)
+      defr.errback{
+        :timeout.should == :timeout
+        done
+      }
+    end
   end
 
 end
