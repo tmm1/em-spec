@@ -11,3 +11,8 @@ task :install => :gem do
 end
 
 task :default => :gem
+
+task :spec do
+  sh 'bacon test/bacon_spec.rb'
+  sh 'spec -f specdoc test/rspec_spec.rb'
+end

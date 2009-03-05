@@ -10,9 +10,12 @@ spec = Gem::Specification.new do |s|
   s.authors = ["Aman Gupta"]
   s.add_dependency('eventmachine', '>= 0.12.4')
   s.add_dependency('bacon', '>= 1.1.0')
-
-  # ruby -rpp -e "pp Dir['{README,{examples,lib,protocol}/**/*.{json,rb,txt,xml}}'].map"
+  s.add_dependency('rspec', '>= 1.1.12')
   s.files = ["README",
              "lib/em/spec.rb",
-             "lib/ext/fiber18.rb"]
+             "lib/em/spec/bacon.rb",
+             "lib/em/spec/rspec.rb",   
+             "lib/ext/fiber18.rb",
+             "test/bacon_spec.rb",
+             "test/rspec_spec.rb"]
 end
