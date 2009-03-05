@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../lib/em/spec'
 require 'spec'
 require File.dirname(__FILE__) + '/../lib/em/spec/rspec'
 
-EM.spec_backend = EventMachine::Spec::Rspec
+#EM.spec_backend = EventMachine::Spec::Rspec
 
 describe 'Rspec' do
   it 'should work as normal outside EM.describe' do
@@ -10,7 +10,7 @@ describe 'Rspec' do
   end
 end
 
-EM.describe EventMachine do
+EM.rspec EventMachine do
   it 'should work' do
     done
   end

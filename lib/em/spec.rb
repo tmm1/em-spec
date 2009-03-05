@@ -19,4 +19,10 @@ module EventMachine
     spec_backend.spec( args, blk )
   end
   class << self; alias :describe :spec; end
+
+  def self.rspec( *args, &block )
+    self.spec_backend = EventMachine::Spec::Rspec
+    self.spec( args, &block )
+  end
+
 end
