@@ -16,8 +16,12 @@ module Spec
       
       alias :original_execute :execute
       def execute(options, instance_variables)
-        original_execute(options, instance_variables)
-        Fiber.yield
+        begin
+          success = original_execute(options, instance_variables)
+        ensure
+          resume_on_error unless success
+          Fiber.yield
+        end
       end
       
       def done
@@ -26,6 +30,14 @@ module Spec
           $em_spec_fiber.resume if $em_spec_fiber
         }
       end      
+      
+      private
+      
+        def resume_on_error
+          EM.next_tick{
+            $em_spec_fiber.resume if $em_spec_fiber
+          }
+        end
       
     end
     
