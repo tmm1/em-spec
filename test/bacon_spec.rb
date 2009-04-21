@@ -44,5 +44,9 @@ EM.describe EventMachine do
       done
     }
   end
-  
+
+  # it "should not block on failure" do
+  #   1.should == 2
+  # end
+
 end
