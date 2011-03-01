@@ -44,6 +44,17 @@ EM.describe EventMachine do
       done
     }
   end
+  
+  describe 'subscope' do
+    should 'have timers here too' do
+      start = Time.now
+
+      EM.add_timer(0.5){
+        (Time.now-start).should.be.close 0.5, 0.1
+        done
+      }
+    end
+  end
 
   # it "should not block on failure" do
   #   1.should == 2
